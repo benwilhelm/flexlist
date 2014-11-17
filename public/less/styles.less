@@ -1,0 +1,47 @@
+@import url('../bower_components/bootstrap/less/bootstrap.less');
+
+#container {
+	padding-top: 1em;
+	padding-bottom: 1em;
+}
+
+form.single-text-input {
+	.form-inline();
+
+	input[type=text] {
+		.form-control();
+		width: 80%;
+		float: left;
+		border-right: none;
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+
+	input[type=submit] {
+		.btn();
+		.btn-primary();
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+		width: 20%;
+	}
+
+}
+
+
+ul.list-view li {
+	border-bottom: 1px solid #eee;
+	font-size: large;
+	padding: .5em 2.2em;
+	position: relative;
+
+	&.closed {
+		text-decoration: line-through;
+	}
+
+	span.glyphicon {
+		float: left;
+		margin-left: -1.5em;
+	}
+}
+
+	

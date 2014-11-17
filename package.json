@@ -1,0 +1,17 @@
+{
+  "name": "todo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ben Wilhelm <ben@doublebeamdesign.com> (http://doublebeamdesign.com/)",
+  "license": "None",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-less": "^0.12.0",
+    "grunt-contrib-watch": "^0.6.1"
+  }
+}

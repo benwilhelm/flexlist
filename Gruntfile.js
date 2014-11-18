@@ -1,9 +1,19 @@
 grunt = require('grunt');
 
+grunt.loadNpmTasks('grunt-http-server');
 grunt.loadNpmTasks('grunt-contrib-less');
 grunt.loadNpmTasks('grunt-contrib-watch');
 
 grunt.initConfig({
+
+	'http-server': {
+		'dev': {
+			root: 'public',
+			port: 8000,
+			host: '127.0.0.1',
+			runInBackground: true
+		}
+	},
 
 	less: {
 		development: {
@@ -25,4 +35,4 @@ grunt.initConfig({
 	}
 });
 
-grunt.registerTask('default', ['less', 'watch']);
+grunt.registerTask('default', ['less', 'http-server:dev', 'watch']);

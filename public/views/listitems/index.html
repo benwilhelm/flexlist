@@ -1,0 +1,28 @@
+<form class='single-text-input'>
+	<input type='text' ng-model='newListItem' placeholder='New...' />
+	<input type='submit' value="Add" ng-click='addToList()' />
+</form>
+
+
+<ul class='list-unstyled list-view'>
+
+	<li class='open' 
+		ng-repeat='item in openItems'>
+		
+		<span class='glyphicon glyphicon-unchecked'
+			  ng-click='closeItem()'></span>
+		
+		<a href='/#/listitems/{{item._id}}'>{{item.text}}</a>
+	</li>
+
+	<li class='closed' 
+		ng-repeat='item in closedItems'>
+		
+		<span class='glyphicon glyphicon-check'
+			  ng-click='openItem()'></span>
+		
+		<a href='/#/listitems/{{item._id}}'>{{item.text}}</a>
+	</li>
+
+</ul>
+

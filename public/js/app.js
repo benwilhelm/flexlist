@@ -1,10 +1,25 @@
 angular.module('FlexList', [
+	'FlexList.directives',
 	'FlexList.listItems',
 	'ngRoute'
-]).config(function($routeProvider){
+])
+
+
+/******************
+ * App config
+ ******************/
+.config(function($routeProvider){
 
 	$routeProvider.when('/', {
 		controller: 'ListItemsController',
-		templateUrl: 'views/list.html'
+		templateUrl: 'views/listitems/index.html'
+	
+	}).when("/listitems/:id", {
+		controller: "ListItemController",
+		templateUrl: "views/listitems/show.html"
+	
+	}).otherwise({
+		redirectTo: "/"
+
 	})
 })

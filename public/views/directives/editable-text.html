@@ -1,0 +1,12 @@
+<div>
+	<input ng-show='editing' 
+		   ng-model='val' 
+		   type='text' 
+		   class='form-control'
+		   ng-blur='done()' />
+
+	<div class='static-text'
+		 ng-show='!editing'
+	     ng-click='edit()'
+	     >{{val}}</div>
+</div>

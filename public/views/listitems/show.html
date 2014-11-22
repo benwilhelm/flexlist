@@ -1,0 +1,23 @@
+<div class="listitems show">
+	<div class="header-controls">
+		<fl-toggle-switch toggle-labels='Closed:Open' 
+						  toggle-attr='item.closed'>
+		</fl-toggle-switch>
+	</div>
+
+	<fl-editable-text editable-value='item.text' 
+					  element-tag='h4'>
+	</fl-editable-text>
+
+	<hr>
+
+	<label class='form-label'>Category</label>
+	<select class='form-control' 
+		    ng-model='item.category'
+		    ng-options='category for category in categories'>
+	</select>
+
+	<hr>
+		<button class='btn btn-primary' ng-click='save()'>Done</button>
+
+</div>

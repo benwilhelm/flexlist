@@ -1,10 +1,16 @@
 angular.module('FlexList.listItems', [
 	'FlexList.database'
 ])
+
+
+/*******************************
+ * List Items Index Controller
+ *******************************/
 .controller('ListItemsController', [ 
 	'$scope', 
+	'$location',
 	'listItemService', 
-function($scope, listItemService){
+function($scope, $location, listItemService){
 	
 	$scope.openItems = [];
 	$scope.closedItems = [];
@@ -19,7 +25,6 @@ function($scope, listItemService){
 				} else {
 					$scope.openItems.push(item);
 				}
-
 			})
 		})
 	})
@@ -29,8 +34,11 @@ function($scope, listItemService){
 	$scope.addToList = function(){
 		var item = service.listItem({text: $scope.newListItem});
 		$scope.openItems.push(item);
-		item.save();
-		$scope.newListItem = "";
+		item.save(function(err, item){
+			$scope.newListItem = "";
+			$location.path("/listitems/" + item._id);
+		});
+	
 	}
 
 	$scope.closeItem = function() {
@@ -49,7 +57,57 @@ function($scope, listItemService){
 		item.open();
 	}
 }])
-.service('listItemService', [ 'flexListDatabase', function(db){
+
+
+/*******************************
+ * Single List Item Controller
+ *******************************/
+.controller('ListItemController',[
+	'$scope',
+	'$routeParams',
+	'$timeout',
+	'$location',
+	'listItemService',
+function($scope, $routeParams, $timeout, $location, listItemService){
+	var id = $routeParams.id;
+	$scope.item = {};
+	listItemService.getOne({'_id':id}, function(err, item){
+		$scope.item = item;
+	});
+	
+	$scope.editingTitle = false;
+	$scope.toggleEditingTitle = function() {
+		$scope.editingTitle = !$scope.editingTitle;
+		$timeout(function(){
+			if ($scope.editingTitle) {
+				angular.element('.title-editor').select();
+			}
+		});
+	}
+
+	$scope.save = function() {
+		$scope.item.save(function(err, item){
+			$location.path('/');
+		})
+	}
+
+	$scope.categories = [
+		'Category 1',
+		'Category 2',
+		'Category 3'
+	]
+
+}])
+
+
+
+/********************
+ * ListItem Service
+ *********************/
+.service('listItemService', [ 
+	'flexListDatabase', 
+	'$timeout',
+function(db, $timeout){
 
 	var service = {};
 
@@ -76,11 +134,18 @@ function($scope, listItemService){
 			callback = callback || function(){};
 			var itemProps = getProps(item);
 			if (itemProps._id) {
-				db.listItems.update({_id:itemProps._id}, itemProps, callback);
+				db.listItems.update({_id:itemProps._id}, itemProps, function(err, ret){
+					$timeout(function(){
+						callback(err,ret);
+					})
+				});
 			} else {
 				db.listItems.insert(itemProps, function(err, ret){
 					item._id = ret._id;
-					callback(err, ret);
+
+					$timeout(function(){
+						callback(err, ret);
+					});
 				});
 			}
 		}
@@ -115,13 +180,29 @@ function($scope, listItemService){
 				ret.push(listItem(item));
 			})
 
-			callback(null, ret);
+			$timeout(function(){
+				callback(null, ret);
+			});
 		});
 	} 
-	service.getAll = getAll
+	service.getAll = getAll;
 
 
+	var getOne = function(params, callback){
+		db.listItems.find(params, function(err, items){
+			if (err) {
+				console.log(err);
+				return callback(err);
+			}
 
+			var ret = items.length ? listItem(items[0]) : null;
+			
+			$timeout(function(){
+				callback(null, ret);
+			});
+		})
+	}
+	service.getOne = getOne;
 
 
 	/*******************

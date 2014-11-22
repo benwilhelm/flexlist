@@ -6285,6 +6285,12 @@ button.close {
     display: none !important;
   }
 }
+.btn-group :focus {
+  box-shadow: none;
+  outline: none !important;
+  outline-color: transparent !important;
+  outline-style: none !important;
+}
 #container {
   padding-top: 1em;
   padding-bottom: 1em;
@@ -6499,4 +6505,14 @@ ul.list-view li.closed {
 ul.list-view li span.glyphicon {
   float: left;
   margin-left: -1.5em;
+}
+ul.list-view li a {
+  display: block;
+}
+div.listitems.show .header-controls {
+  margin-bottom: .5em;
+  text-align: right;
+}
+div.listitems.show .header-controls .btn {
+  font-size: smaller;
 }

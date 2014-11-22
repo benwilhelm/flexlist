@@ -1,0 +1,14 @@
+<div class="btn-group btn-toggle"> 
+	<button class="btn"
+			ng-class="toggleValue ? 'btn-primary active' : 'btn-default'"
+			ng-click='setTrue()'>
+		{{trueLabel}}
+	</button>
+	
+	<button class="btn"
+			ng-class="toggleValue ? 'btn-default' : 'btn-primary active'"
+			ng-click='setFalse()'>
+		{{falseLabel}}
+	</button>
+
+</div>

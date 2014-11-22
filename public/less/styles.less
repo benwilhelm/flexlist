@@ -1,5 +1,12 @@
 @import url('../bower_components/bootstrap/less/bootstrap.less');
 
+.btn-group :focus {
+	box-shadow: none;
+	outline: none !important;
+    outline-color: transparent !important;
+    outline-style: none !important;
+}
+
 #container {
 	padding-top: 1em;
 	padding-bottom: 1em;
@@ -42,6 +49,10 @@ ul.list-view li {
 		float: left;
 		margin-left: -1.5em;
 	}
+
+	a {
+		display: block;
+	}
 }
 
-	
+@import url('listitems.less');

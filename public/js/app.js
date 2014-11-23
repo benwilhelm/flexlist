@@ -1,6 +1,7 @@
 angular.module('FlexList', [
 	'FlexList.directives',
 	'FlexList.listItems',
+	'FlexList.categories',
 	'ngRoute'
 ])
 
@@ -17,6 +18,10 @@ angular.module('FlexList', [
 	}).when("/listitems/:id", {
 		controller: "ListItemController",
 		templateUrl: "views/listitems/show.html"
+
+	}).when("/categories", {
+		controller: "CategoriesController",
+		templateUrl: "views/categories/index.html"
 	
 	}).otherwise({
 		redirectTo: "/"

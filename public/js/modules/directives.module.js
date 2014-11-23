@@ -1,5 +1,32 @@
 angular.module('FlexList.directives', [])
 
+/****************
+ * Nav Bar
+ ****************/
+.directive('flNavbar', [
+	'$location', 
+function($location){
+	return {
+		restrict: 'AE',
+		replace: true,
+		scope: {},
+		templateUrl: 'views/directives/navbar.html',
+		link: function(scope, elem, atts){
+
+			scope.$on('$locationChangeStart', function(event){
+				var path = $location.path();
+				path = path.split('/');
+
+				var section = (path[1]) ? path[1] : 'listitems';
+				scope.section = section;
+			})
+		}
+	}
+
+}])
+
+
+
 /********************
  * Toggle Switch
  *********************/
@@ -42,9 +69,12 @@ function($timeout){
 		restrict: 'AE',
 		replace: true,
 		scope: {
-			val: '=editableValue'
+			val: '=editableValue',
+			class: '@class',
+			id: '@id'
 		},
 		templateUrl: 'views/directives/editable-text.html',
+		transclude: true,
 
 		compile: function(tElem, atts){
 			var tagName = atts.elementTag || 'p';
@@ -57,17 +87,15 @@ function($timeout){
 				scope.editing = false;
 
 				scope.edit = function() {
+					scope.editing = true;
 					$timeout(function(){
-						scope.editing = true;
 						elem.find('input').select();
 					})
 
 				}
 
 				scope.done = function() {
-					$timeout(function(){
-						scope.editing = false;
-					})
+					scope.editing = false;
 				}
 			}		
 		} 

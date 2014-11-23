@@ -11,7 +11,7 @@ angular.module('FlexList.listItems', [
 	'$location',
 	'listItemService', 
 function($scope, $location, listItemService){
-	
+
 	$scope.openItems = [];
 	$scope.closedItems = [];
 	var service = listItemService;
@@ -56,6 +56,13 @@ function($scope, $location, listItemService){
 		$scope.openItems.push(item);
 		item.open();
 	}
+
+	$scope.deleteItem = function() {
+		var item = this.item;
+		var idx = this.$index;
+		$scope.closedItems.splice(idx, 1);
+		item.delete();
+	}
 }])
 
 
@@ -91,11 +98,25 @@ function($scope, $routeParams, $timeout, $location, listItemService){
 		})
 	}
 
-	$scope.categories = [
-		'Category 1',
-		'Category 2',
-		'Category 3'
-	]
+	$scope.removeCategory = function() {
+		var id = this.category.id;
+		delete $scope.item.categories[id];
+	}
+
+	$scope.selectedCategory = null;
+	$scope.categories = {
+		'1': {id:'1', name:'Category 1'},
+		'2': {id:'2', name:'Category 2'},
+		'3': {id:'3', name:'Category 3'}
+	}
+
+	$scope.$watch('selectedCategory', function(newVal, oldVal){
+		$scope.item.categories = $scope.item.categories || {};
+		if (newVal && newVal != oldVal) {
+			$scope.item.categories[newVal] = $scope.categories[newVal];
+			$scope.selectedCategory = null;
+		}
+	})
 
 }])
 
@@ -160,6 +181,11 @@ function(db, $timeout){
 			callback = callback || function(){};
 			item.closed = false;
 			item.save(callback);
+		}
+
+		item.delete = function(callback) {
+			callback = callback || function() {};
+			db.listItems.remove({_id:item._id}, callback);
 		}
 
 		return item;

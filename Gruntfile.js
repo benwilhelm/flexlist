@@ -31,6 +31,13 @@ grunt.initConfig({
 			options: {
 				livereload: true
 			}
+		},
+
+		html: {
+			files: 'public/views/**/*.html',
+			options: {
+				livereload: true
+			}
 		}
 	}
 });

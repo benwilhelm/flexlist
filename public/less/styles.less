@@ -12,6 +12,17 @@
 	padding-bottom: 1em;
 }
 
+#button_nav {
+	margin-bottom: 1em;
+	.btn-group();
+	.btn-group-justified();
+
+	a {
+		.btn();
+		.btn-default();
+	}
+}
+
 form.single-text-input {
 	.form-inline();
 
@@ -41,13 +52,25 @@ ul.list-view li {
 	padding: .5em 2.2em;
 	position: relative;
 
-	&.closed {
-		text-decoration: line-through;
-	}
-
-	span.glyphicon {
+	span.listitem-checkbox {
+		.glyphicon();
+		.glyphicon-unchecked();
 		float: left;
 		margin-left: -1.5em;
+	}
+
+	&.closed {
+		text-decoration: line-through;
+
+		span.listitem-checkbox {
+			.glyphicon-check();
+		}
+	}
+
+
+	span.glyphicon-trash {
+		float: right;
+		margin-right: -1.5em;
 	}
 
 	a {

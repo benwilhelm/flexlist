@@ -9,7 +9,7 @@
 	<li class='open' 
 		ng-repeat='item in openItems'>
 		
-		<span class='glyphicon glyphicon-unchecked'
+		<span class='listitem-checkbox'
 			  ng-click='closeItem()'></span>
 		
 		<a href='/#/listitems/{{item._id}}'>{{item.text}}</a>
@@ -18,10 +18,13 @@
 	<li class='closed' 
 		ng-repeat='item in closedItems'>
 		
-		<span class='glyphicon glyphicon-check'
+		<span class='listitem-checkbox'
 			  ng-click='openItem()'></span>
+		<span class='glyphicon glyphicon-trash'
+			  ng-click='deleteItem()'></span>
 		
 		<a href='/#/listitems/{{item._id}}'>{{item.text}}</a>
+
 	</li>
 
 </ul>

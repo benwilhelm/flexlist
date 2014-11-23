@@ -3,21 +3,41 @@
 		<fl-toggle-switch toggle-labels='Closed:Open' 
 						  toggle-attr='item.closed'>
 		</fl-toggle-switch>
+
+		<button class='button-done' ng-click='save()'>Done</button>
+
+		<div class="clearfix"></div>
 	</div>
 
 	<fl-editable-text editable-value='item.text' 
-					  element-tag='h4'>
+					  element-tag='h2'
+					  class='listitem-title'>
 	</fl-editable-text>
 
-	<hr>
+	<form class="form-horizontal">
 
-	<label class='form-label'>Category</label>
-	<select class='form-control' 
-		    ng-model='item.category'
-		    ng-options='category for category in categories'>
-	</select>
+		<div class="form-group">
+			<label class='control-label col-xs-3'>Category</label>
+			<div class="col-xs-9">
+				<select class='form-control'
+					    ng-model='selectedCategory'
+					    ng-options='id as category.name for (id, category) in categories'>
+					<option value="">Categories...</option>
+				</select>
+			</div>
+		</div>
 
-	<hr>
-		<button class='btn btn-primary' ng-click='save()'>Done</button>
+		<ul class="list-group category-list">
+			<li class='list-group-item' 
+				ng-repeat='category in item.categories' >
+
+				<span class="remove-category"
+					  ng-click="removeCategory()"></span>
+					  
+				{{category.name}}
+			</li>
+		</ul>
+
+	</form>
 
 </div>

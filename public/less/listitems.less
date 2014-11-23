@@ -4,14 +4,49 @@ div.listitems {
 
 		.header-controls {
 			margin-bottom: .5em;
-			text-align: right;
 
-			.btn {
+			.btn-toggle .btn {
 				font-size: smaller;
+			}
+
+			.button-done {
+				.btn();
+				.btn-primary();
+				float: right;
+			}
+
+			hr {
+				clear: both;
 			}
 		}
 
 
-		
+		.listitem-title {
+			background-color: #eee;
+			clear: both;
+			margin-bottom: 1em;
+			padding: 10px;
+
+			h2 {
+				padding: 0;
+				margin: 0;
+			}
+		}
+
+
+		.category-list {
+
+			li {
+				padding-right: 2.2em;
+
+				.remove-category {
+					.glyphicon();
+					.glyphicon-remove();
+					cursor: pointer;
+					float: right;
+					margin-right: -1.5em;
+				}
+			}
+		}
 	}
 }

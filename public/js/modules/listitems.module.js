@@ -1,5 +1,6 @@
 angular.module('FlexList.listItems', [
-	'FlexList.database'
+	'FlexList.database',
+	'FlexList.categories'
 ])
 
 
@@ -9,7 +10,7 @@ angular.module('FlexList.listItems', [
 .controller('ListItemsController', [ 
 	'$scope', 
 	'$location',
-	'listItemService', 
+	'listItemService',
 function($scope, $location, listItemService){
 
 	$scope.openItems = [];
@@ -75,7 +76,8 @@ function($scope, $location, listItemService){
 	'$timeout',
 	'$location',
 	'listItemService',
-function($scope, $routeParams, $timeout, $location, listItemService){
+	'categoryService',
+function($scope, $routeParams, $timeout, $location, listItemService, categoryService){
 	var id = $routeParams.id;
 	$scope.item = {};
 	listItemService.getOne({'_id':id}, function(err, item){
@@ -104,11 +106,10 @@ function($scope, $routeParams, $timeout, $location, listItemService){
 	}
 
 	$scope.selectedCategory = null;
-	$scope.categories = {
-		'1': {id:'1', name:'Category 1'},
-		'2': {id:'2', name:'Category 2'},
-		'3': {id:'3', name:'Category 3'}
-	}
+	$scope.categories = {}
+	categoryService.getAll(function(err, cats){
+		$scope.categories = cats;
+	})
 
 	$scope.$watch('selectedCategory', function(newVal, oldVal){
 		$scope.item.categories = $scope.item.categories || {};
@@ -126,50 +127,23 @@ function($scope, $routeParams, $timeout, $location, listItemService){
  * ListItem Service
  *********************/
 .service('listItemService', [ 
-	'flexListDatabase', 
+	'flexListDatabase',
 	'$timeout',
 function(db, $timeout){
 
 	var service = {};
 
 	var listItem = function(vals) {
-		var item = angular.extend({
+		vals = angular.extend({
 			created: new Date,
 			closed: false
-		}, vals)
+		}, vals);
 
-
-		var props = [ '_id', 'closed', 'created', 'text' ]
-		var getProps = function(vals) {
-			var ret = {};
-			props.forEach(function(prop){
-				ret[prop] = (vals.hasOwnProperty(prop)) ? vals[prop] : '';
-			})
-			return ret;
-		}
-
-
-
-
-		item.save = function(callback){
-			callback = callback || function(){};
-			var itemProps = getProps(item);
-			if (itemProps._id) {
-				db.listItems.update({_id:itemProps._id}, itemProps, function(err, ret){
-					$timeout(function(){
-						callback(err,ret);
-					})
-				});
-			} else {
-				db.listItems.insert(itemProps, function(err, ret){
-					item._id = ret._id;
-
-					$timeout(function(){
-						callback(err, ret);
-					});
-				});
-			}
-		}
+		var item = db.resource(
+			'listItems', 
+			[ '_id', 'closed', 'created', 'text' ],
+			vals
+		);
 
 		item.close = function(callback) {
 			callback = callback || function(){};
@@ -183,45 +157,37 @@ function(db, $timeout){
 			item.save(callback);
 		}
 
-		item.delete = function(callback) {
-			callback = callback || function() {};
-			db.listItems.remove({_id:item._id}, callback);
-		}
-
 		return item;
 
 	}
 	service.listItem = listItem;
 
 
-	var getAll = function(callback){
-		db.listItems.find({}, function(err, items){
-			if (err) {
-				console.error(err);
-				return callback(err);
-			}
-
+	var get = function(params, callback){
+		db.get('listItems', params, function(err, items){
 			var ret = [];
 			items.forEach(function(item){
-				ret.push(listItem(item));
+				var li = listItem(item);
+				ret.push(li);
 			})
 
 			$timeout(function(){
 				callback(null, ret);
 			});
-		});
-	} 
+		})
+	}
+	service.get = get;
+
+
+	var getAll = function(callback) {
+		get({}, callback);
+	};
 	service.getAll = getAll;
 
 
 	var getOne = function(params, callback){
-		db.listItems.find(params, function(err, items){
-			if (err) {
-				console.log(err);
-				return callback(err);
-			}
-
-			var ret = items.length ? listItem(items[0]) : null;
+		db.getOne('listItems', params, function(err, item){
+			var ret = listItem(item);
 			
 			$timeout(function(){
 				callback(null, ret);

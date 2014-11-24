@@ -1,51 +1,49 @@
-div.listitems {
 
-	&.show {
+&.show {
 
-		.header-controls {
-			margin-bottom: .5em;
+	.header-controls {
+		margin-bottom: .5em;
 
-			.btn-toggle .btn {
-				font-size: smaller;
-			}
-
-			.button-done {
-				.btn();
-				.btn-primary();
-				float: right;
-			}
-
-			hr {
-				clear: both;
-			}
+		.btn-toggle .btn {
+			font-size: smaller;
 		}
 
+		.button-done {
+			.btn();
+			.btn-primary();
+			float: right;
+		}
 
-		.listitem-title {
-			background-color: #eee;
+		hr {
 			clear: both;
-			margin-bottom: 1em;
-			padding: 10px;
-
-			h2 {
-				padding: 0;
-				margin: 0;
-			}
 		}
+	}
 
 
-		.category-list {
+	.listitem-title {
+		background-color: #eee;
+		clear: both;
+		margin-bottom: 1em;
+		padding: 10px;
 
-			li {
-				padding-right: 2.2em;
+		h2, h3 {
+			padding: 0;
+			margin: 0;
+		}
+	}
 
-				.remove-category {
-					.glyphicon();
-					.glyphicon-remove();
-					cursor: pointer;
-					float: right;
-					margin-right: -1.5em;
-				}
+
+	.category-list {
+
+		li {
+			padding-right: 2.2em;
+
+			.remove-category {
+				.glyphicon();
+				.glyphicon-remove();
+				cursor: pointer;
+				float: right;
+				margin-right: -1.5em;
 			}
 		}
 	}

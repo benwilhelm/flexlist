@@ -1,0 +1,27 @@
+<div class="categories show">
+	<div class="header-controls">
+		<button class='button-done' ng-click='save()'>Done</button>
+		<div class="clearfix"></div>
+	</div>
+
+	<fl-editable-text editable-value='category.name' 
+					  element-tag='h3'
+					  class='listitem-title'>
+	</fl-editable-text>
+
+	<form class="form-horizontal">
+
+		<div class="form-group">
+			<label class='control-label col-xs-3'>Parent</label>
+			<div class="col-xs-9">
+				<select class='form-control'
+					    ng-model='category.parent'
+					    ng-options='id as parent.name for (id, parent) in parents'>
+					<option value="">None</option>
+				</select>
+			</div>
+		</div>
+
+	</form>
+
+</div>

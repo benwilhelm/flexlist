@@ -23,6 +23,10 @@ angular.module('FlexList', [
 		controller: "CategoriesController",
 		templateUrl: "views/categories/index.html"
 	
+	}).when("/categories/:id", {
+		controller: "CategoryController",
+		templateUrl: "views/categories/show.html"
+	
 	}).otherwise({
 		redirectTo: "/"
 

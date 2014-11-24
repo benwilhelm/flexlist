@@ -6622,13 +6622,13 @@ ul.list-view li span.glyphicon-trash {
 ul.list-view li a {
   display: block;
 }
-div.listitems.show .header-controls {
+.show .header-controls {
   margin-bottom: .5em;
 }
-div.listitems.show .header-controls .btn-toggle .btn {
+.show .header-controls .btn-toggle .btn {
   font-size: smaller;
 }
-div.listitems.show .header-controls .button-done {
+.show .header-controls .button-done {
   display: inline-block;
   margin-bottom: 0;
   font-weight: normal;
@@ -6652,32 +6652,32 @@ div.listitems.show .header-controls .button-done {
   border-color: #2e6da4;
   float: right;
 }
-div.listitems.show .header-controls .button-done:focus,
-div.listitems.show .header-controls .button-done:active:focus,
-div.listitems.show .header-controls .button-done.active:focus,
-div.listitems.show .header-controls .button-done.focus,
-div.listitems.show .header-controls .button-done:active.focus,
-div.listitems.show .header-controls .button-done.active.focus {
+.show .header-controls .button-done:focus,
+.show .header-controls .button-done:active:focus,
+.show .header-controls .button-done.active:focus,
+.show .header-controls .button-done.focus,
+.show .header-controls .button-done:active.focus,
+.show .header-controls .button-done.active.focus {
   outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
-div.listitems.show .header-controls .button-done:hover,
-div.listitems.show .header-controls .button-done:focus,
-div.listitems.show .header-controls .button-done.focus {
+.show .header-controls .button-done:hover,
+.show .header-controls .button-done:focus,
+.show .header-controls .button-done.focus {
   color: #333333;
   text-decoration: none;
 }
-div.listitems.show .header-controls .button-done:active,
-div.listitems.show .header-controls .button-done.active {
+.show .header-controls .button-done:active,
+.show .header-controls .button-done.active {
   outline: 0;
   background-image: none;
   -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
-div.listitems.show .header-controls .button-done.disabled,
-div.listitems.show .header-controls .button-done[disabled],
-fieldset[disabled] div.listitems.show .header-controls .button-done {
+.show .header-controls .button-done.disabled,
+.show .header-controls .button-done[disabled],
+fieldset[disabled] .show .header-controls .button-done {
   cursor: not-allowed;
   pointer-events: none;
   opacity: 0.65;
@@ -6685,63 +6685,64 @@ fieldset[disabled] div.listitems.show .header-controls .button-done {
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-div.listitems.show .header-controls .button-done:hover,
-div.listitems.show .header-controls .button-done:focus,
-div.listitems.show .header-controls .button-done.focus,
-div.listitems.show .header-controls .button-done:active,
-div.listitems.show .header-controls .button-done.active,
-.open > .dropdown-togglediv.listitems.show .header-controls .button-done {
+.show .header-controls .button-done:hover,
+.show .header-controls .button-done:focus,
+.show .header-controls .button-done.focus,
+.show .header-controls .button-done:active,
+.show .header-controls .button-done.active,
+.open > .dropdown-toggle.show .header-controls .button-done {
   color: #ffffff;
   background-color: #286090;
   border-color: #204d74;
 }
-div.listitems.show .header-controls .button-done:active,
-div.listitems.show .header-controls .button-done.active,
-.open > .dropdown-togglediv.listitems.show .header-controls .button-done {
+.show .header-controls .button-done:active,
+.show .header-controls .button-done.active,
+.open > .dropdown-toggle.show .header-controls .button-done {
   background-image: none;
 }
-div.listitems.show .header-controls .button-done.disabled,
-div.listitems.show .header-controls .button-done[disabled],
-fieldset[disabled] div.listitems.show .header-controls .button-done,
-div.listitems.show .header-controls .button-done.disabled:hover,
-div.listitems.show .header-controls .button-done[disabled]:hover,
-fieldset[disabled] div.listitems.show .header-controls .button-done:hover,
-div.listitems.show .header-controls .button-done.disabled:focus,
-div.listitems.show .header-controls .button-done[disabled]:focus,
-fieldset[disabled] div.listitems.show .header-controls .button-done:focus,
-div.listitems.show .header-controls .button-done.disabled.focus,
-div.listitems.show .header-controls .button-done[disabled].focus,
-fieldset[disabled] div.listitems.show .header-controls .button-done.focus,
-div.listitems.show .header-controls .button-done.disabled:active,
-div.listitems.show .header-controls .button-done[disabled]:active,
-fieldset[disabled] div.listitems.show .header-controls .button-done:active,
-div.listitems.show .header-controls .button-done.disabled.active,
-div.listitems.show .header-controls .button-done[disabled].active,
-fieldset[disabled] div.listitems.show .header-controls .button-done.active {
+.show .header-controls .button-done.disabled,
+.show .header-controls .button-done[disabled],
+fieldset[disabled] .show .header-controls .button-done,
+.show .header-controls .button-done.disabled:hover,
+.show .header-controls .button-done[disabled]:hover,
+fieldset[disabled] .show .header-controls .button-done:hover,
+.show .header-controls .button-done.disabled:focus,
+.show .header-controls .button-done[disabled]:focus,
+fieldset[disabled] .show .header-controls .button-done:focus,
+.show .header-controls .button-done.disabled.focus,
+.show .header-controls .button-done[disabled].focus,
+fieldset[disabled] .show .header-controls .button-done.focus,
+.show .header-controls .button-done.disabled:active,
+.show .header-controls .button-done[disabled]:active,
+fieldset[disabled] .show .header-controls .button-done:active,
+.show .header-controls .button-done.disabled.active,
+.show .header-controls .button-done[disabled].active,
+fieldset[disabled] .show .header-controls .button-done.active {
   background-color: #337ab7;
   border-color: #2e6da4;
 }
-div.listitems.show .header-controls .button-done .badge {
+.show .header-controls .button-done .badge {
   color: #337ab7;
   background-color: #ffffff;
 }
-div.listitems.show .header-controls hr {
+.show .header-controls hr {
   clear: both;
 }
-div.listitems.show .listitem-title {
+.show .listitem-title {
   background-color: #eee;
   clear: both;
   margin-bottom: 1em;
   padding: 10px;
 }
-div.listitems.show .listitem-title h2 {
+.show .listitem-title h2,
+.show .listitem-title h3 {
   padding: 0;
   margin: 0;
 }
-div.listitems.show .category-list li {
+.show .category-list li {
   padding-right: 2.2em;
 }
-div.listitems.show .category-list li .remove-category {
+.show .category-list li .remove-category {
   position: relative;
   top: 1px;
   display: inline-block;
@@ -6755,6 +6756,6 @@ div.listitems.show .category-list li .remove-category {
   float: right;
   margin-right: -1.5em;
 }
-div.listitems.show .category-list li .remove-category:before {
+.show .category-list li .remove-category:before {
   content: "\e014";
 }

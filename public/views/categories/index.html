@@ -1,6 +1,15 @@
-<ul class="list-group">
-	<li class="list-group-item"
-		ng-repeat='category in categories'>
-		<a href="/#/categories/{{category.id}}">{{category.name}}</a>
+<form class='single-text-input'>
+	<input type='text' ng-model='newCatName' placeholder='New...' />
+	<input type='submit' value="Add" ng-click='addToList()' />
+</form>
+
+
+<ul class="list-unstyled list-view">
+	<li ng-repeat='category in categories'>
+
+		<span class='glyphicon glyphicon-trash'
+			  ng-click='deleteCategory()'></span>
+
+		<a href="/#/categories/{{category._id}}">{{category.name}}</a>
 	</li>
 </ul>

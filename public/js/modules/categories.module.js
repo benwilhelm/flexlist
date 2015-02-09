@@ -8,17 +8,29 @@ angular.module('FlexList.categories', ['ngRoute'])
 	'categoryService', 
 
 function($scope, service){
-	$scope.categories = {}
-	service.getAll(function(err, cats){
+	$scope.categories = [];
+	$scope.newCat = {name: '', parent: ''}
+	service.getTree(null, function(err, cats){
 		$scope.categories = cats;
 	});
 
-	$scope.newCatName = "";
-	$scope.addToList = function(){
-		var category = service.category({name: $scope.newCatName});
-		$scope.categories.push(category);
-		category.save(function(err, category){
-			$scope.newCatName = "";
+	$scope.addCategory = function(){
+		var category = service.category($scope.newCat);
+		async.parallel([
+			function(cb){
+				category.save(cb);
+			},
+			function(cb) {
+				if ($scope.newCat.parent) {
+					return category.assignParent($scope.newCat.parent, cb);
+				}
+				cb(null,null);
+			}
+		], function(err, rslt){
+			$scope.newCat = {};
+			service.getTree(null, function(err, cats){
+				$scope.categories = cats;
+			})
 		});
 	}
 
@@ -49,7 +61,6 @@ function($scope, $routeParams, $location, service){
 
 	$scope.parents = [];
 	service.get({'_id': {'$ne': id}}, function(err, cats){
-		var idx = cats.indexOf($scope.category);
 		$scope.parents = cats;
 	})
 
@@ -74,8 +85,33 @@ function(db, $timeout){
 	var service = {};
 
 	var category = function(vals) {
-
-		var cat = db.resource('categories', ['_id', 'name', 'parent'], vals);
+		var cat = db.resource('categories', ['_id', 'name', 'children'], vals);
+		
+		cat.assignParent = function(parentObject, callback) {
+			var that = this;
+			async.series([
+				function(cb){
+					service.getOne({children:cat._id}, function(err, oldParent){
+						if (err) return cb(err);
+						if (!oldParent._id) return cb(null,null);
+						oldParent.children = oldParent.children || [];
+						var idx = oldParent.children.indexOf(that._id);
+						oldParent.children.splice(idx,1);
+						oldParent.save(cb);
+					})
+				},
+				function(cb){
+					service.getOne({_id:that.parent._id}, function(err, newParent){
+						if (err) return cb(err);
+						newParent.children = newParent.children || [];
+						newParent.children.push(cat._id);
+						newParent.save(cb);
+					})
+				}
+			], function(err, rslts){
+				callback(err, rslts[1]);
+			})
+		}
 		return cat;
 	}
 	service.category = category;
@@ -111,6 +147,37 @@ function(db, $timeout){
 		});
 	}
 	service.getOne = getOne;
+
+	var getTree = function(root, callback) {
+		getAll(function(err, rslts){
+			if (err) callback(err);
+			var tree = {};
+			var rootElements = [];
+			rslts.forEach(function(rslt){
+				tree[rslt._id] = rslt;
+			});
+
+			var rootObject;
+			_.each(tree, function(elmnt){
+				populate(elmnt, tree);
+				if (root && root === elmnt._id) {
+					rootObject = elmnt;
+				}
+			})
+
+			var ret = rootObject ? [rootObject] : tree;
+			if (callback) callback(null, tree);
+		})
+
+		function populate(obj, elements) {
+			if (!obj || !obj.children) return;
+			obj.children.forEach(function(childId, idx){
+				obj.children[idx] = elements[childId];
+				delete elements[childId];
+			})
+		}
+	}
+	service.getTree = getTree;
 
 	return service;
 }])

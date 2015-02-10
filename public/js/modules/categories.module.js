@@ -15,14 +15,15 @@ function($scope, service){
 	});
 
 	$scope.addCategory = function(){
+		debugger;
 		var category = service.category($scope.newCat);
-		async.parallel([
+		async.series([
 			function(cb){
 				category.save(cb);
 			},
 			function(cb) {
-				if ($scope.newCat.parent) {
-					return category.assignParent($scope.newCat.parent, cb);
+				if (category.parent) {
+					return category.assignParent(category.parent.value, cb);
 				}
 				cb(null,null);
 			}
@@ -36,9 +37,14 @@ function($scope, service){
 
 	$scope.deleteCategory = function() {
 		var cat = this.category;
-		var idx = this.$index;
-		cat.delete();
-		$scope.categories.splice(idx,1);
+		async.series({
+			del:  function(cb){ cat.delete(cb) },
+			tree: function(cb){ service.getTree(null, cb) }
+		},function(err, rslt){
+			if (err) console.error(err);
+			$scope.categories = rslt.tree;
+		})
+
 	}
 
 }])
@@ -89,22 +95,17 @@ function(db, $timeout){
 		
 		cat.assignParent = function(parentObject, callback) {
 			var that = this;
+			var parentId = typeof parentObject === 'string' ? parentObject : parentObject._id;
 			async.series([
 				function(cb){
-					service.getOne({children:cat._id}, function(err, oldParent){
-						if (err) return cb(err);
-						if (!oldParent._id) return cb(null,null);
-						oldParent.children = oldParent.children || [];
-						var idx = oldParent.children.indexOf(that._id);
-						oldParent.children.splice(idx,1);
-						oldParent.save(cb);
-					})
+					that.removeParent(cb);
 				},
 				function(cb){
-					service.getOne({_id:that.parent._id}, function(err, newParent){
+					service.getOne({_id:parentId}, function(err, newParent){
+						console.log(newParent);
 						if (err) return cb(err);
 						newParent.children = newParent.children || [];
-						newParent.children.push(cat._id);
+						newParent.children.push(that._id);
 						newParent.save(cb);
 					})
 				}
@@ -112,13 +113,38 @@ function(db, $timeout){
 				callback(err, rslts[1]);
 			})
 		}
+
+		cat.removeParent = function(callback) {
+			var that = this;
+			service.getOne({children:cat._id}, function(err, oldParent){
+				if (!err && !oldParent._id) return callback(null,null);
+				oldParent.children = oldParent.children || [];
+				var idx = oldParent.children.indexOf(that._id);
+				oldParent.children.splice(idx,1);
+				oldParent.save(callback);
+			})
+		}
+
+		var originalDelete = cat.delete;
+		cat.delete = function(callback){
+			var that = this;
+			async.series([
+				function(cb) {
+					that.removeParent(cb)
+				},
+				function(cb){
+					originalDelete.call(that, cb);
+				}
+			], callback);
+		}
+
 		return cat;
 	}
 	service.category = category;
 
 
 	var get = function(query, callback) {
-		db.get('categories', query, function(err, cats){
+		db.get('categories', query).sort({'name':1}).exec(function(err, cats){
 			var ret = [];
 			cats.forEach(function(cat){
 				ret.push(category(cat));
@@ -152,9 +178,9 @@ function(db, $timeout){
 		getAll(function(err, rslts){
 			if (err) callback(err);
 			var tree = {};
-			var rootElements = [];
-			rslts.forEach(function(rslt){
-				tree[rslt._id] = rslt;
+			rslts.forEach(function(rslt, idx){
+				var nameIdx = rslt.name + idx
+				tree[nameIdx] = rslt;
 			});
 
 			var rootObject;

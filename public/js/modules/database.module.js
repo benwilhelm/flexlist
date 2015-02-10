@@ -54,26 +54,30 @@ function($timeout){
 	service.resource = resource;
 
 	var get = function(collectionName, query, callback) {
-		db[collectionName].find(query, function(err, items){
+		var cursor = db[collectionName].find(query)
+		if (!callback) return cursor;
+
+		cursor.exec(function(err, items){
 			if (err) {
 				console.error(err);
 				return callback(err);
 			}
+
 			callback(null, items);
 		})
 	}
 	service.get = get;
 
 	var getAll = function(collectionName, callback){
-		get(collectionName, {}, callback);
+		return get(collectionName, {}, callback);
 	} 
 	service.getAll = getAll;
 
 
 	var getOne = function(collectionName, params, callback){
-		get(collectionName, params, function(err, items){
+		return get(collectionName, params, function(err, items){
 			var ret = items ? items[0] : null;			
-			callback(null, ret);
+			if (callback) callback(null, ret);
 		})
 	}
 	service.getOne = getOne;

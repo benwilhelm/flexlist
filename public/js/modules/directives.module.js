@@ -57,6 +57,37 @@ function($location){
 	}
 })
 
+/********************
+ * Tree Select
+ ********************/
+ .directive('flTreeSelect', ['$timeout', function($timeout){
+
+ 		return {
+ 			restrict: 'AE',
+ 			replace: true,
+ 			scope: {
+ 				labelProp: '@labelProp',
+ 				valueProp: '@valueProp',
+ 				placeholderLabel: '@placeholderLabel',
+ 				tree: '=',
+ 				myModel: '='
+ 			},
+ 			templateUrl: 'views/directives/tree-select.html',
+ 			link: function(scope, elem, atts) {
+				
+				scope.$watch('tree', function(){
+					scope.flattened = _.map(scope.tree, function(item){
+						return {
+							value: item._id,
+							name: item.name
+						}
+					});
+				})
+
+ 			}
+ 		}
+ }])
+
 
 /********************
  * Editable Text

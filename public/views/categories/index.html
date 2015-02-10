@@ -3,11 +3,11 @@
   	<input type='text' ng-model='newCat.name' placeholder='New...' />
   	<input type='submit' value="Add" ng-click='addCategory()' />
   </div>
-  <select class='form-control'
-        ng-model='newCat.parent'
-        ng-options='parent.name for parent in categories track by parent._id'>
-    <option value="">Parent...</option>
-  </select>
+  <fl-tree-select class='form-control' 
+                  tree="categories"
+                  my-model='newCat.parent'
+                  placeholder-label='Parent...'>
+  </fl-tree-select>
 
 </form>
 

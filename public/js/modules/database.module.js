@@ -25,23 +25,17 @@ function($timeout){
 		}
 
 		crud.save = function(callback){
+			var that = this;
 			callback = callback || function(){};
 			var props = getProps(crud);
-			if (props._id) {
-				collection.update({_id:props._id}, props, function(err, ret){
-					$timeout(function(){
-						callback(err,ret);
-					})
-				});
-			} else {
-				collection.insert(props, function(err, ret){
-					crud._id = ret._id;
+			collection.update({_id:props._id}, {$set: props}, {upsert: true}, function(err, numReplaced, newDoc){
+				$timeout(function(){
+					if (err) return callback(err, null);
 
-					$timeout(function(){
-						callback(err, ret);
-					});
-				});
-			}
+					var ret = _.extend(that, newDoc);
+					callback(null, ret);
+				})
+			});
 		}
 
 		crud.delete = function(callback) {
@@ -81,6 +75,11 @@ function($timeout){
 		})
 	}
 	service.getOne = getOne;
+
+	var collection = function(collectionName) {
+		return db[collectionName];
+	}
+	service.collection = collection;
 
 	return service;
 

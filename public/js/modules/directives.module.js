@@ -68,22 +68,32 @@ function($location){
  			scope: {
  				labelProp: '@labelProp',
  				valueProp: '@valueProp',
+ 				spacer: '@spacer',
  				placeholderLabel: '@placeholderLabel',
  				tree: '=',
  				myModel: '='
  			},
  			templateUrl: 'views/directives/tree-select.html',
  			link: function(scope, elem, atts) {
-				
+ 				scope.spacer = scope.spacer || '';
 				scope.$watch('tree', function(){
-					scope.flattened = _.map(scope.tree, function(item){
-						return {
-							value: item._id,
-							name: item.name
-						}
-					});
+					var flattened = [];
+					var howDeep = 0;
+					scope.flattened = flatten(scope.tree, flattened, "");
 				})
 
+				function flatten(tree, flattened, spacer) {
+					spacer += scope.spacer; 
+					_.each(tree, function(item){
+						var obj = {
+							name: spacer + item[scope.labelProp],
+							value: item[scope.valueProp]
+						}
+						flattened.push(obj);
+						flatten(item.children, flattened, spacer)
+					});
+					return flattened;
+				}
  			}
  		}
  }])

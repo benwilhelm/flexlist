@@ -8,11 +8,12 @@ angular.module('FlexList.listItems', [
  * List Items Index Controller
  *******************************/
 .controller('ListItemsController', [ 
-	'$scope', 
+	'$scope',
+	'$rootScope',
 	'$location',
 	'listItemService',
-function($scope, $location, listItemService){
-
+function($scope, $rootScope, $location, listItemService){
+  $rootScope.bodyLayout = 'listitems index';
 	$scope.openItems = [];
 	$scope.closedItems = [];
 	var service = listItemService;
@@ -72,12 +73,14 @@ function($scope, $location, listItemService){
  *******************************/
 .controller('ListItemController',[
 	'$scope',
+	'$rootScope',
 	'$routeParams',
 	'$timeout',
 	'$location',
 	'listItemService',
 	'categoryService',
-function($scope, $routeParams, $timeout, $location, listItemService, categoryService){
+function($scope, $rootScope, $routeParams, $timeout, $location, listItemService, categoryService){
+	$rootScope.bodyLayout = 'listitems single'
 	var id = $routeParams.id;
 	$scope.item = {};
 	listItemService.getOne({'_id':id}, function(err, item){

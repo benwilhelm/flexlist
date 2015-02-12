@@ -5,9 +5,11 @@ angular.module('FlexList.categories', ['ngRoute'])
  *******************************/
 .controller('CategoriesController', [
 	'$scope',
+	'$rootScope',
 	'categoryService', 
 
-function($scope, service){
+function($scope, $rootScope, service){
+	$rootScope.bodyLayout = 'categories index'
 	$scope.categories = [];
 	$scope.newCat = {name: '', parent: ''}
 	service.getTree(null, function(err, cats){
@@ -15,15 +17,15 @@ function($scope, service){
 	});
 
 	$scope.addCategory = function(){
-		debugger;
-		var category = service.category($scope.newCat);
-		async.series([
+		var category = service.category({ name: $scope.newCat.name });
+		async.waterfall([
 			function(cb){
 				category.save(cb);
 			},
-			function(cb) {
-				if (category.parent) {
-					return category.assignParent(category.parent.value, cb);
+			function(category, cb) {
+				if ($scope.newCat.parent) {
+					console.log(category);
+					return category.assignParent($scope.newCat.parent.value, cb);
 				}
 				cb(null,null);
 			}
@@ -55,11 +57,13 @@ function($scope, service){
  *******************************/
 .controller('CategoryController', [
 	'$scope',
+	'$rootScope',
 	'$routeParams',
 	'$location',
 	'categoryService',
-function($scope, $routeParams, $location, service){
+function($scope, $rootScope, $routeParams, $location, service){
 	var id = $routeParams.id;
+	$rootScope.bodyLayout = 'categories single'
 	$scope.category = {};
 	service.getOne({_id:id}, function(err, cat){
 		$scope.category = cat
@@ -92,6 +96,7 @@ function(db, $timeout){
 
 	var category = function(vals) {
 		var cat = db.resource('categories', ['_id', 'name', 'children'], vals);
+		cat.children = cat.children || [];
 		
 		cat.assignParent = function(parentObject, callback) {
 			var that = this;
@@ -102,14 +107,14 @@ function(db, $timeout){
 				},
 				function(cb){
 					service.getOne({_id:parentId}, function(err, newParent){
-						console.log(newParent);
 						if (err) return cb(err);
-						newParent.children = newParent.children || [];
+						console.log(that._id);
 						newParent.children.push(that._id);
 						newParent.save(cb);
 					})
 				}
 			], function(err, rslts){
+				if (err) console.error(err);
 				callback(err, rslts[1]);
 			})
 		}
@@ -179,31 +184,59 @@ function(db, $timeout){
 			if (err) callback(err);
 			var tree = {};
 			rslts.forEach(function(rslt, idx){
-				var nameIdx = rslt.name + idx
-				tree[nameIdx] = rslt;
+				tree[rslt._id] = rslt;
 			});
 
 			var rootObject;
 			_.each(tree, function(elmnt){
-				populate(elmnt, tree);
+				populateTree(elmnt, tree);
 				if (root && root === elmnt._id) {
 					rootObject = elmnt;
 				}
 			})
 
 			var ret = rootObject ? [rootObject] : tree;
-			if (callback) callback(null, tree);
+			ret = sortRecursive(ret, 'name', 'children');
+			if (callback) callback(null, ret);
 		})
 
-		function populate(obj, elements) {
-			if (!obj || !obj.children) return;
-			obj.children.forEach(function(childId, idx){
-				obj.children[idx] = elements[childId];
-				delete elements[childId];
-			})
-		}
 	}
 	service.getTree = getTree;
-
 	return service;
+
+
+	/**
+	 * Private Functions
+	 ======================================*/
+	
+	function populateTree(obj, elements) {
+		if (!obj 
+		||  !obj.children 
+		||  !obj.children.length) 
+		return;
+		
+		obj.children.forEach(function(childId, idx){
+			obj.children[idx] = elements[childId];
+			delete elements[childId];
+		})
+	}
+
+	function sortRecursive(tree, sortProp, childProp) {
+		tree = _.toArray(tree);
+		var sorted = tree.sort(sortFunc)
+		_.each(sorted, function(item){
+			item[childProp] = sortRecursive(item[childProp], sortProp, childProp);
+		})
+		return sorted;
+
+		function sortFunc(a, b) {
+			if (a[sortProp] < b[sortProp])
+				return -1;
+			if (a[sortProp] > b[sortProp])
+				return 1;
+			return 0;
+		}
+	}
+
+
 }])

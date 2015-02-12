@@ -6759,3 +6759,9 @@ fieldset[disabled] .show .header-controls .button-done.active {
 .show .category-list li .remove-category:before {
   content: "\e014";
 }
+body.categories ul.category-tree li {
+  padding-left: 0;
+}
+body.categories ul.category-tree li li {
+  margin-right: -2.2em;
+}

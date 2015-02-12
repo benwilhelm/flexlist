@@ -1,15 +1,21 @@
 <form class='single-text-input'>
   <div class="form-group">
-  	<input type='text' ng-model='newCat.name' placeholder='New...' />
-  	<input type='submit' value="Add" ng-click='addCategory()' />
+  	<input type='text' tabindex='1' ng-model='newCat.name' placeholder='New...' />
+  	<input type='submit' tabindex='2' value="Add" ng-click='addCategory()' />
   </div>
   <fl-tree-select class='form-control' 
                   tree="categories"
                   my-model='newCat.parent'
-                  placeholder-label='Parent...'>
+                  placeholder-label='No Parent...'
+                  label-prop='name'
+                  value-prop='_id'
+                  spacer='-'
+                  tabindex='1'>
   </fl-tree-select>
 
 </form>
+
+<hr>
 
 <script type="text/ng-template" id="category_recursor.html">
     <span class='glyphicon glyphicon-trash'
@@ -22,7 +28,7 @@
 </script>
 
 
-<ul class="list-unstyled list-view">
+<ul class="list-unstyled list-view category-tree">
 	<li ng-repeat='category in categories' ng-include="'category_recursor.html'"></li>
 </ul>
 
